@@ -23,3 +23,11 @@ This document records verified repository work and remaining MID-review evidence
 5. Complete the remaining distinct days of meaningful GitHub development.
 
 Run the graph tests with `cd server && npm install && npm test`.
+
+### Additional work — 15 November 2026, evening
+- Extracted `normalizeReading` and `normalizeBatch` into `server/src/telemetry.js` for consistent input validation.
+- Updated API and simulator to use shared normalization; batch input is validated in full before database insertion is attempted.
+- Added eight new telemetry unit test cases, including malformed sensor IDs, invalid timestamps, non-finite values and batch limits.
+- Verified all three updated files are present in the GitHub `main` branch. **The eight new tests have not yet been executed against a local checkout**; run `cd server && npm test` before claiming they pass.
+- Commits: [validation module](https://github.com/piyushgujor666-glitch/NexusFlow/commit/1885c6908177e92c5374d5693c1ad7df0778d2cc), [API integration](https://github.com/piyushgujor666-glitch/NexusFlow/commit/b485f98a16f2c43e155ea981d726562d22d36136), [regression tests](https://github.com/piyushgujor666-glitch/NexusFlow/commit/978882c5128324598e1f8b860e1e17c2157232b0).
+- These changes were made on the already-counted 15 November development day; they do **not** add a third distinct commit day.
