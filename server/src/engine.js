@@ -1,23 +1,87 @@
-import {Subject,filter,map,scan,tap} from 'rxjs';
-import {validateGraph} from './graph.js';
-const cmp=(v,op,l)=>({'>':v>l,'>=':v>=l,'<':v<l,'<=':v<=l})[op]??false;
-export class RuleEngine{
- constructor(onAlert){this.stream=new Subject();this.subscriptions=[];this.onAlert=onAlert}
- deploy(graph){
-  const {paths}=validateGraph(graph);for(const s of this.subscriptions)s.unsubscribe();this.subscriptions=[];
-  for(const path of paths){
-   const source=path[0],ops=[filter(p=>p.metadata.sensor===source.data.sensor),map(p=>({...p,current:p.value}))];
-   for(const n of path.slice(1)){
-    if(n.type==='average'){
-     const window=Number(n.data.window);
-     ops.push(scan((s,p)=>{const values=[...s.values,p.current].slice(-window);return{values,point:{...p,current:values.reduce((a,b)=>a+b,0)/values.length}}},{values:[],point:null}),map(s=>s.point));
-    }else if(n.type==='threshold')ops.push(filter(p=>cmp(p.current,n.data.operator,Number(n.data.limit))));
-    else if(n.type==='alert')ops.push(tap(p=>this.onAlert({sensor:p.metadata.sensor,value:p.value,evaluatedValue:p.current,message:String(n.data.message||'Rule triggered').slice(0,200),at:p.timestamp,nodeId:n.id})));
-   }
-   this.subscriptions.push(this.stream.pipe(...ops).subscribe({error:e=>console.error('RxJS pipeline:',e.message)}));
-  }
-  return {deployedPaths:this.subscriptions.length};
+import { Subject, filter, map, scan, tap } from 'rxjs';
+import { validateGraph } from './graph.js';
+
+const compare = (value, operator, limit) => {
+ switch (operator) {
+  case '>': return value > limit;
+  case '>=': return value >= limit;
+  case '<': return value < limit;
+  case '<=': return value <= limit;
+  default: return false;
  }
- ingest(point){this.stream.next(point)}
- close(){for(const s of this.subscriptions)s.unsubscribe();this.stream.complete()}
+};
+
+/** Compile a validated graph into independent RxJS subscriptions. */
+export class RuleEngine {
+ constructor(onAlert) {
+  if (typeof onAlert !== 'function') throw new TypeError('onAlert callback required');
+  this.stream = new Subject();
+  this.subscriptions = [];
+  this.onAlert = onAlert;
+  this.closed = false;
+ }
+ deploy(graph) {
+  if (this.closed) throw new Error('Rule engine is closed');
+  // Validate first: a rejected deployment must preserve the current live rules.
+  const { paths } = validateGraph(graph);
+  const next = [];
+  try {
+   for (const path of paths) {
+    const source = path[0];
+    const ops = [
+     filter(point => point?.metadata?.sensor === source.data.sensor),
+     filter(point => typeof point.value === 'number' && Number.isFinite(point.value)),
+     map(point => ({ ...point, current: point.value }))
+    ];
+    for (const node of path.slice(1)) {
+     if (node.type === 'average') {
+      const window = node.data.window;
+      ops.push(
+       scan((state, point) => {
+        const values = [...state.values, point.current].slice(-window);
+        return { values, point: { ...point, current: values.reduce((sum, value) => sum + value, 0) / values.length } };
+       }, { values: [], point: null }),
+       map(state => state.point)
+      );
+     } else if (node.type === 'threshold') {
+      ops.push(filter(point => compare(point.current, node.data.operator, node.data.limit)));
+     } else if (node.type === 'alert') {
+      ops.push(tap(point => {
+       const alert = {
+        sensor: point.metadata.sensor, value: point.value,
+        evaluatedValue: point.current,
+        message: String(node.data?.message || 'Rule triggered').slice(0, 200),
+        at: point.timestamp, nodeId: node.id
+       };
+       try {
+        Promise.resolve(this.onAlert(alert)).catch(error => console.error('Alert callback failed:', error));
+       } catch (error) {
+        console.error('Alert callback failed:', error);
+       }
+      }));
+     }
+    }
+    next.push(this.stream.pipe(...ops).subscribe({
+     error: error => console.error('RxJS pipeline failed:', error)
+    }));
+   }
+  } catch (error) {
+   for (const subscription of next) subscription.unsubscribe();
+   throw error;
+  }
+  for (const subscription of this.subscriptions) subscription.unsubscribe();
+  this.subscriptions = next;
+  return { deployedPaths: next.length };
+ }
+ ingest(point) {
+  if (this.closed) throw new Error('Rule engine is closed');
+  this.stream.next(point);
+ }
+ close() {
+  if (this.closed) return;
+  this.closed = true;
+  for (const subscription of this.subscriptions) subscription.unsubscribe();
+  this.subscriptions = [];
+  this.stream.complete();
+ }
 }
