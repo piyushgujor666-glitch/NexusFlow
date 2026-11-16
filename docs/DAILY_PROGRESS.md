@@ -31,3 +31,14 @@ Run the graph tests with `cd server && npm install && npm test`.
 - Verified all three updated files are present in the GitHub `main` branch. **The eight new tests have not yet been executed against a local checkout**; run `cd server && npm test` before claiming they pass.
 - Commits: [validation module](https://github.com/piyushgujor666-glitch/NexusFlow/commit/1885c6908177e92c5374d5693c1ad7df0778d2cc), [API integration](https://github.com/piyushgujor666-glitch/NexusFlow/commit/b485f98a16f2c43e155ea981d726562d22d36136), [regression tests](https://github.com/piyushgujor666-glitch/NexusFlow/commit/978882c5128324598e1f8b860e1e17c2157232b0).
 - These changes were made on the already-counted 15 November development day; they do **not** add a third distinct commit day.
+
+
+## Day 3 — 16 November 2026 (IST)
+- Reworked ingestion benchmarking to exercise the real Express HTTP endpoint through configurable concurrent clients.
+- Added input bounds for COUNT (up to 1,000,000), BATCH (up to 5,000), and CONCURRENCY (up to 32), plus API health checking and insert-count verification.
+- Added benchmark results for wall-clock writes/sec and batch latency p50, p95, and maximum. Nonpassing throughput sets a nonzero exit code to avoid presenting a missed target as success.
+- Added five automated benchmark regression tests and ran the equivalent tests locally using Node.js 22: **5 passed, 0 failed**. A full repository integration test run was not performed.
+- Real MongoDB throughput: **not measured**; 5,000 writes/sec target remains unverified.
+- Example measured workload (run with MongoDB and API started): `cd server && CONCURRENCY=4 BATCH=1000 COUNT=20000 npm run benchmark` (PowerShell: `$env:CONCURRENCY=4; $env:BATCH=1000; $env:COUNT=20000; npm run benchmark`).
+- Commits: [concurrent benchmark runner](https://github.com/piyushgujor666-glitch/NexusFlow/commit/f538d4bea21c893cfe67849796b1237b302858ef), [CLI integration](https://github.com/piyushgujor666-glitch/NexusFlow/commit/b065f84157175e8b943f71ff07c7cd8210195121), [benchmark regression tests](https://github.com/piyushgujor666-glitch/NexusFlow/commit/3158f5c9fde0014941298b5459f55d31c418af22).
+- Portal tracking and the two weekly write-up submissions must still be confirmed by the user in Infotact.
