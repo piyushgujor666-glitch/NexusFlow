@@ -42,3 +42,12 @@ Run the graph tests with `cd server && npm install && npm test`.
 - Example measured workload (run with MongoDB and API started): `cd server && CONCURRENCY=4 BATCH=1000 COUNT=20000 npm run benchmark` (PowerShell: `$env:CONCURRENCY=4; $env:BATCH=1000; $env:COUNT=20000; npm run benchmark`).
 - Commits: [concurrent benchmark runner](https://github.com/piyushgujor666-glitch/NexusFlow/commit/f538d4bea21c893cfe67849796b1237b302858ef), [CLI integration](https://github.com/piyushgujor666-glitch/NexusFlow/commit/b065f84157175e8b943f71ff07c7cd8210195121), [benchmark regression tests](https://github.com/piyushgujor666-glitch/NexusFlow/commit/3158f5c9fde0014941298b5459f55d31c418af22).
 - Portal tracking and the two weekly write-up submissions must still be confirmed by the user in Infotact.
+
+
+### Additional Day 3 work — 16 November 2026, evening (IST)
+- Hardened the RxJS rule compiler against malformed stream points, synchronous and asynchronous alert callback failures, and repeated shutdown calls.
+- Rejected deployment after closure and preserved existing active subscriptions when graph validation fails.
+- Added six focused RxJS engine tests for moving averages, sensor filtering, redeployment, failure isolation, and lifecycle handling.
+- **Verification:** committed files were read back from GitHub. The RxJS tests were **not executed** because the isolated test environment lacked the `rxjs` dependency and its installation timed out. Run `cd server && npm ci` (or `npm install` if no lockfile) followed by `npm test` in an environment with package access.
+- Commits: [engine reliability](https://github.com/piyushgujor666-glitch/NexusFlow/commit/f86eb5fdb50f662ca492fb56ace2062d488114d3), [engine regression tests](https://github.com/piyushgujor666-glitch/NexusFlow/commit/ac78428657a75450cf7a487f2e870087dd681c8d).
+- All changes remain on the already-counted 16 November development day; distinct GitHub commit days remain **3 of 10**. Infotact portal synchronization and weekly write-up submissions remain unverified.
