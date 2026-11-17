@@ -51,3 +51,14 @@ Run the graph tests with `cd server && npm install && npm test`.
 - **Verification:** committed files were read back from GitHub. The RxJS tests were **not executed** because the isolated test environment lacked the `rxjs` dependency and its installation timed out. Run `cd server && npm ci` (or `npm install` if no lockfile) followed by `npm test` in an environment with package access.
 - Commits: [engine reliability](https://github.com/piyushgujor666-glitch/NexusFlow/commit/f86eb5fdb50f662ca492fb56ace2062d488114d3), [engine regression tests](https://github.com/piyushgujor666-glitch/NexusFlow/commit/ac78428657a75450cf7a487f2e870087dd681c8d).
 - All changes remain on the already-counted 16 November development day; distinct GitHub commit days remain **3 of 10**. Infotact portal synchronization and weekly write-up submissions remain unverified.
+
+
+## Day 4 — 17 November 2026 (IST)
+- Added `server/src/time-series.js` to validate native MongoDB time-series configuration, not merely a matching collection name.
+- Updated `server/src/db.js` to reject incompatible `telemetry` collections on startup and close MongoDB connections when initialization fails.
+- Handled the MongoDB namespace-exists race by re-reading and verifying the resulting collection.
+- Added seven focused tests in `server/test/time-series.test.js` covering creation, reuse, wrong collection type, wrong metadata field, creation errors and concurrent creation races.
+- **Verification:** the focused tests were run against the new local source with Node.js: **7 passed, 0 failed**. The full backend test suite and live MongoDB integration were not run.
+- **Still pending:** actual MongoDB time-series screenshot, 5,000 writes/sec ingestion audit, and two real Infotact weekly write-up submissions. Portal syncing has not been verified.
+- Commits: [time-series verification](https://github.com/piyushgujor666-glitch/NexusFlow/commit/dcdcd7534835b58215ea6f992f585c4e64293dee), [database startup safeguard](https://github.com/piyushgujor666-glitch/NexusFlow/commit/e53ee6be797769bb5ca982fd3ef0715eb98880d6), [test coverage](https://github.com/piyushgujor666-glitch/NexusFlow/commit/c33930a469614b63a01ebbaf9063c74dc2eb6319).
+- Verify MongoDB locally by starting it, running the backend, then executing `db.getCollectionInfos({name:'telemetry'})` in `mongosh`.
