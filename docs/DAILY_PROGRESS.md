@@ -62,3 +62,11 @@ Run the graph tests with `cd server && npm install && npm test`.
 - **Still pending:** actual MongoDB time-series screenshot, 5,000 writes/sec ingestion audit, and two real Infotact weekly write-up submissions. Portal syncing has not been verified.
 - Commits: [time-series verification](https://github.com/piyushgujor666-glitch/NexusFlow/commit/dcdcd7534835b58215ea6f992f585c4e64293dee), [database startup safeguard](https://github.com/piyushgujor666-glitch/NexusFlow/commit/e53ee6be797769bb5ca982fd3ef0715eb98880d6), [test coverage](https://github.com/piyushgujor666-glitch/NexusFlow/commit/c33930a469614b63a01ebbaf9063c74dc2eb6319).
 - Verify MongoDB locally by starting it, running the backend, then executing `db.getCollectionInfos({name:'telemetry'})` in `mongosh`.
+
+
+### Additional Day 4 work — 17 November 2026, evening (IST)
+- Updated the React frontend telemetry socket handler to support both individual and array event payloads, filter non-finite readings and retain the latest 70 samples. The initial recent-readings API response is now checked before updating chart state.
+- Expanded `docs/WEEKLY_WRITEUPS.md` into two evidence-aware draft summaries, with concrete implemented modules, known limitations, reproducible verification steps and explicit unverified submission status.
+- **Verification:** the changed frontend and documentation files were read back from GitHub after commit. A production frontend build and live Socket.IO integration were **not executed**, so runtime UI correctness remains unverified.
+- Commits: [telemetry UI payload handling](https://github.com/piyushgujor666-glitch/NexusFlow/commit/5af5ec7cc3cdfe4168c444a22c4fa6cd22099dd6), [weekly write-up drafts](https://github.com/piyushgujor666-glitch/NexusFlow/commit/6952b6e90f1fa9b5f83d1abbf5929ca239d97663).
+- **Distinct GitHub commit days remain 4/10** (November 14–17); no additional day is claimed for this evening's work. Infotact submission, MongoDB throughput and both weekly write-up uploads remain unverified.
