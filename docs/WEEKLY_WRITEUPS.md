@@ -1,31 +1,42 @@
-# NexusFlow weekly write-ups — working drafts
+# NexusFlow MID review — two weekly write-up drafts
 
-These drafts are templates. Replace placeholders with truthful work performed and results before submitting them to Infotact.
+**Status:** Drafts only. These are repository-backed technical summaries, **not** evidence of Infotact portal submission. Add real screenshots, test logs, reviewer comments and dates before submitting. Do not present unrun tests or benchmarks as passing.
 
-## Week 1 — MongoDB Time-Series & React Flow Canvas
-**Objective:** Build the MERN foundation for IoT telemetry and node-based visual pipelines.
+## Week 1 — MERN foundation, React Flow and MongoDB Time-Series
 
-**Work available in repository:** `server/src/db.js` defines a MongoDB time-series collection with timestamp and sensor metadata. `server/src/index.js` implements Express ingestion endpoints. `client/src/main.jsx` defines the React Flow canvas, custom nodes and draggable connections.
+**Objective:** Establish the IoT telemetry platform and a graph-based rule editor.
 
-**Evidence to add:** [Screenshots of locally running app, GET /api/health, time-series collection confirmation].  
-**Issues and resolution:** [Describe genuine setup/bug issues].  
-**Testing:** [Record actual local test results].  
-**Next step:** Implement and verify the visual graph JSON compiler.
+**Implementation:** The Express API in `server/src/index.js` provides telemetry ingestion, recent readings, flow retrieval/deployment, alerts and simulator endpoints. `server/src/telemetry.js` validates numeric values, sensor IDs and timestamps, including batch requests. `server/src/db.js` creates indexes and uses `server/src/time-series.js` to check the collection's native time-series type and field configuration. `client/src/main.jsx` implements a four-type React Flow node canvas (source, average, threshold, alert), editable nodes, connection handles and live telemetry visualization.
 
-## Week 2 — RxJS Logic Compiler & Visual Node Library
-**Objective:** Convert JSON graphs to reactive rules and demonstrate graph serialization.
+**Engineering issue and resolution:** An existing regular MongoDB collection called `telemetry` could previously pass startup checks and invalidate the time-series demonstration. Added explicit schema checks and connection cleanup on failure. Seven focused schema tests were reported passing locally on 17 November; no live MongoDB instance has yet been used to verify the integration.
 
-**Work available in repository:** `server/src/graph.js` validates edges, node types, acyclicity and complete rule paths. `server/src/engine.js` composes RxJS source filters, moving averages, threshold comparisons and alert actions. The frontend has source, average, threshold and alert nodes, plus a graph deploy button.
+**Evidence to collect:** Screenshot of the running React Flow editor, a successful `GET /api/health`, the `mongosh` result of `db.getCollectionInfos({name:'telemetry'})`, and a screenshot of real telemetry stored in MongoDB. Record exact environment and dates.
 
-**Evidence to add:** [Paste serialized graph response; screenshot successful rule deploy; screenshot live alert].  
-**Issues and resolution:** [Describe actual problems encountered].  
-**Testing:** Four graph validation tests passed in the local source copy on November 14, 2026; rerun against the committed repository before submission.  
-**Benchmark:** [Actual reads/sec or writes/sec, date and hardware].  
-**Next step:** Achieve and document the MID review benchmark and polish.
+**Outcome:** Implementation committed to GitHub; deployment and screenshots remain unverified.
 
-## Mid-Review demonstration checklist
-- Visual editor with 4 nodes and 3 edges
-- Saved graph JSON verified from API
-- MongoDB Time-Series verified via `db.getCollectionInfos({name:'telemetry'})`
-- Real measured ingestion throughput vs target 5,000 writes/sec
-- Two verified weekly write-ups and genuine GitHub day-by-day commit record
+## Week 2 — JSON graph validation, RxJS rules and benchmarking
+
+**Objective:** Serialize a visual graph into executable streaming rules and measure ingestion throughput.
+
+**Implementation:** `server/src/graph.js` validates graph shape, node parameters, connections, cycles and source-to-alert paths. `server/src/engine.js` compiles validated paths into RxJS sensor filters, moving averages, threshold checks and alert callbacks. `server/src/benchmark-runner.js` supports configurable concurrent HTTP batches, checks insert counts and reports p50/p95/max batch latency plus writes per second.
+
+**Engineering issue and resolution:** Invalid graphs and malformed telemetry can cause unsafe rule deployment. Added stricter graph checks and error isolation in the RxJS engine. The frontend telemetry socket handler was also updated on 17 November to tolerate single-point or array payloads and ignore invalid values.
+
+**Testing and limitations:** Thirteen graph tests were reported passing locally on 15 November. Five benchmark regression tests were reported passing locally on 16 November. Six RxJS tests were added but were **not executed** due to unavailable `rxjs` dependency in the test environment. No real 5,000-writes/sec MongoDB benchmark has been recorded. These test reports are partial, not a complete integration verification.
+
+**Evidence to collect:** Saved JSON from `GET /api/flow`, successful `POST /api/flow` response, a screenshot of a live alert, output from `npm test`, and actual benchmark output with system specifications. Do not invent benchmark numbers.
+
+**Outcome:** Rule compiler and benchmark harness committed; real throughput, end-to-end UI behavior and submission remain unverified.
+
+## Reproducible MID review verification
+
+1. Start MongoDB and the backend with documented environment variables; run `cd server && npm install && npm test`.
+2. Check `GET http://localhost:4000/api/health` and `GET http://localhost:4000/api/flow`; save response screenshots.
+3. In `mongosh`, run `db.getCollectionInfos({name:'telemetry'})` against the `nexusflow` database; confirm `type: 'timeseries'` and expected field names.
+4. Start the frontend, deploy a valid graph, enable the simulator and capture the telemetry/alert UI.
+5. With the backend and MongoDB running, execute `cd server && COUNT=20000 BATCH=1000 CONCURRENCY=4 npm run benchmark` on macOS/Linux, or set the corresponding `$env:` variables in PowerShell. Record hardware, duration, throughput, latency and any failures.
+6. Upload the two truthful weekly write-ups and supporting screenshots to Infotact. Verify portal acceptance and repository linking manually.
+
+## GitHub activity requirement
+
+As of 17 November 2026, repository history shows commits on **four distinct India-local calendar days**: November 14, 15, 16 and 17. This is **4/10** distinct development days, not proof of Infotact approval. Do not manufacture or backdate commits to fill the requirement.
