@@ -13,9 +13,9 @@ function App(){
  const onConnect=useCallback(conn=>setEdges(e=>addEdge({...conn,animated:true},e)),[setEdges]);
  useEffect(()=>{
   fetch(API+'/api/flow').then(r=>r.json()).then(({graph})=>{setNodes(graph.nodes);setEdges(graph.edges);setStatus('Connected')}).catch(()=>setStatus('API offline'));
-  fetch(API+'/api/telemetry/recent').then(r=>r.json()).then(setPoints).catch(()=>{});
+  fetch(API+'/api/telemetry/recent').then(r=>{if(!r.ok)throw Error('Telemetry unavailable');return r.json()}).then(data=>{if(Array.isArray(data))setPoints(data)}).catch(()=>{});
   fetch(API+'/api/alerts').then(r=>r.json()).then(setAlerts).catch(()=>{});
-  const socket=io(API);socket.on('telemetry',p=>setPoints(old=>[...old,p].slice(-70)));socket.on('alert',a=>setAlerts(old=>[a,...old].slice(0,30)));
+  const socket=io(API);socket.on('telemetry',p=>setPoints(old=>[...old,...(Array.isArray(p)?p:[p])].filter(item=>item&&typeof item.value==='number'&&Number.isFinite(item.value)).slice(-70)));socket.on('alert',a=>setAlerts(old=>[a,...old].slice(0,30)));
   return()=>socket.disconnect();
  },[setNodes,setEdges]);
  async function save(){try{const res=await fetch(API+'/api/flow',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({graph:{nodes,edges}})});const data=await res.json();if(!res.ok)throw Error(data.error);setMessage('Deployed '+data.nodeCount+' nodes and '+data.pathCount+' rule paths')}catch(e){setMessage(e.message)}}
