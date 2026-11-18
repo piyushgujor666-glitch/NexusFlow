@@ -22,7 +22,10 @@ export function serializeFlow(nodes, edges) {
       ...(edge.targetHandle ? { targetHandle: edge.targetHandle } : {})
     }))
   };
-  return JSON.stringify(graph, null, 2);
+  const json = JSON.stringify(graph, null, 2);
+  // Export must be accepted by the matching importer, including size and shape limits.
+  parseFlow(json);
+  return json;
 }
 
 export function parseFlow(text) {
