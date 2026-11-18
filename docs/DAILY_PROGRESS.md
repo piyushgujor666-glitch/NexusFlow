@@ -70,3 +70,13 @@ Run the graph tests with `cd server && npm install && npm test`.
 - **Verification:** the changed frontend and documentation files were read back from GitHub after commit. A production frontend build and live Socket.IO integration were **not executed**, so runtime UI correctness remains unverified.
 - Commits: [telemetry UI payload handling](https://github.com/piyushgujor666-glitch/NexusFlow/commit/5af5ec7cc3cdfe4168c444a22c4fa6cd22099dd6), [weekly write-up drafts](https://github.com/piyushgujor666-glitch/NexusFlow/commit/6952b6e90f1fa9b5f83d1abbf5929ca239d97663).
 - **Distinct GitHub commit days remain 4/10** (November 14–17); no additional day is claimed for this evening's work. Infotact submission, MongoDB throughput and both weekly write-up uploads remain unverified.
+
+
+## Day 5 — 18 November 2026 (IST)
+- Implemented browser graph export as downloadable `nexusflow-graph.json` and import from a local JSON file in the React Flow editor.
+- Added `client/src/flow-json.js`: portable JSON with node types, canvas coordinates, configuration and edge relationships; strips temporary React Flow runtime fields and rejects oversized or malformed snapshots.
+- Imported graphs are not automatically deployed; the user must explicitly click **Deploy graph**, where backend validation remains authoritative.
+- Added nine client-side pure Node serialization regression tests (round-tripping, malformed data, duplicate nodes and edges, unknown nodes and file size), and styled the import control.
+- **Verification:** files committed to and re-read from GitHub. Test execution and a production browser build are not yet verified; this environment could not access GitHub via local git to check out the full source. Run `cd client && npm install && node --test test/flow-json.test.js && npm run build` on a connected machine.
+- Real MongoDB 5,000 writes/sec throughput, Infotact recognition and both weekly write-up submissions remain unverified.
+- Commits: [JSON serialization](https://github.com/piyushgujor666-glitch/NexusFlow/commit/038958ec438fb8f9e4ee5fe15ef152650391bf5b), [editor controls](https://github.com/piyushgujor666-glitch/NexusFlow/commit/1a872dfaf866ada79c7bd55fc6d8325ca001e61f), [nine test cases](https://github.com/piyushgujor666-glitch/NexusFlow/commit/076567a1c0ba20510d8d4cc234a473b77848e1fc), [styling](https://github.com/piyushgujor666-glitch/NexusFlow/commit/70e2f40f3219f4ca9c544cbe80205e626496d14e).
