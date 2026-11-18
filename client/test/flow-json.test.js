@@ -52,3 +52,10 @@ test('rejects unknown node types',()=>{
  graph.nodes[0].type='unsafe';
  assert.throws(()=>parseFlow(JSON.stringify(graph)),/invalid or duplicate node/);
 });
+
+test('export rejects invalid graphs instead of producing unusable downloads',()=>{
+ assert.throws(()=>serializeFlow([{...nodes[0],position:{x:Infinity,y:0}},nodes[1]],edges),/invalid or duplicate node/);
+});
+test('export rejects duplicate connections',()=>{
+ assert.throws(()=>serializeFlow(nodes,[...edges,{...edges[0],id:'second'}]),/duplicate connections/);
+});
