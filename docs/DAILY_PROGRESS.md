@@ -95,5 +95,6 @@ Run the graph tests with `cd server && npm install && npm test`.
 - Added three focused regression tests for rejecting ambiguous dates, accepting explicit offsets/fractional seconds, and rejecting impossible month values.
 - **Verification:** committed files read back from GitHub `main`. Tests and a live MongoDB integration run were **not executed** in this run. Execute `cd server && npm install && npm test` with dependencies available.
 - **Compatibility:** clients previously sending date-only or timezone-less timestamp strings must now send timezone-qualified ISO date-times; missing timestamps still default to the server clock.
+- Follow-up fix: corrected regex escaping in the ISO date-time matcher ([commit](https://github.com/piyushgujor666-glitch/NexusFlow/commit/577805b63155d6877c646402b1face7bdab220f2)).
 - Commits: [timestamp validation](https://github.com/piyushgujor666-glitch/NexusFlow/commit/02746f5fb7fa1f474000e9bd143fae1b1e864b0f), [timestamp tests](https://github.com/piyushgujor666-glitch/NexusFlow/commit/c477fdf96d226bbee44af50ada41db76a994856d).
 - This is the sixth distinct GitHub development date (November 14–19), subject to Infotact recognition. Both weekly write-ups remain unverified as submitted, and the real MongoDB 5,000 writes/sec benchmark remains outstanding.
