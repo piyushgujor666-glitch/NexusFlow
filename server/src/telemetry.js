@@ -12,10 +12,10 @@ export function normalizeReading(raw, now = () => new Date()) {
   let timestamp;
   if (raw.timestamp === undefined || raw.timestamp === null) {
     timestamp = now();
-  } else if (typeof raw.timestamp === 'string' && raw.timestamp.trim() !== '') {
+  } else if (typeof raw.timestamp === 'string' && /^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,3})?(?:Z|[+-]\\d{2}:\\d{2})$/.test(raw.timestamp)) {
     timestamp = new Date(raw.timestamp);
   } else {
-    throw new Error('Timestamp must be a nonempty ISO date string');
+    throw new Error('Timestamp must be an ISO 8601 date-time with timezone');
   }
   if (!(timestamp instanceof Date) || !Number.isFinite(timestamp.getTime())) {
     throw new Error('Invalid timestamp');
