@@ -88,3 +88,12 @@ Run the graph tests with `cd server && npm install && npm test`.
 - **Verification:** GitHub files were updated. Local GitHub checkout remains blocked because `github.com` DNS resolution failed in the runner; the 11 tests and frontend build were **not run**. Execute `cd client && npm install && npm test && npm run build` with network access.
 - Commits: [export validation](https://github.com/piyushgujor666-glitch/NexusFlow/commit/611166c4ff44306dd98dc3ac58cbf23423971144), [regression tests](https://github.com/piyushgujor666-glitch/NexusFlow/commit/9f6b6e35166addbaccc0366b2c1f9a01e6c7346f), [test script](https://github.com/piyushgujor666-glitch/NexusFlow/commit/e1640c4aa78778b10de48e722c74e67f07610555).
 - Still **5 distinct commit days of 10** (November 14–18); same-day commits do not add a sixth. Week 1 and Week 2 write-ups exist as drafts but neither Infotact submission is verified. No live MongoDB throughput result is available.
+
+
+## Day 6 — 19 November 2026 (IST)
+- Tightened telemetry timestamp parsing: API input must now use ISO 8601 date-time syntax with an explicit `Z` or numeric timezone offset. This prevents ambiguous local-time strings from being interpreted differently across hosts.
+- Added three focused regression tests for rejecting ambiguous dates, accepting explicit offsets/fractional seconds, and rejecting impossible month values.
+- **Verification:** committed files read back from GitHub `main`. Tests and a live MongoDB integration run were **not executed** in this run. Execute `cd server && npm install && npm test` with dependencies available.
+- **Compatibility:** clients previously sending date-only or timezone-less timestamp strings must now send timezone-qualified ISO date-times; missing timestamps still default to the server clock.
+- Commits: [timestamp validation](https://github.com/piyushgujor666-glitch/NexusFlow/commit/02746f5fb7fa1f474000e9bd143fae1b1e864b0f), [timestamp tests](https://github.com/piyushgujor666-glitch/NexusFlow/commit/c477fdf96d226bbee44af50ada41db76a994856d).
+- This is the sixth distinct GitHub development date (November 14–19), subject to Infotact recognition. Both weekly write-ups remain unverified as submitted, and the real MongoDB 5,000 writes/sec benchmark remains outstanding.
