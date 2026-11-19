@@ -98,3 +98,12 @@ Run the graph tests with `cd server && npm install && npm test`.
 - Follow-up fix: corrected regex escaping in the ISO date-time matcher ([commit](https://github.com/piyushgujor666-glitch/NexusFlow/commit/577805b63155d6877c646402b1face7bdab220f2)).
 - Commits: [timestamp validation](https://github.com/piyushgujor666-glitch/NexusFlow/commit/02746f5fb7fa1f474000e9bd143fae1b1e864b0f), [timestamp tests](https://github.com/piyushgujor666-glitch/NexusFlow/commit/c477fdf96d226bbee44af50ada41db76a994856d).
 - This is the sixth distinct GitHub development date (November 14–19), subject to Infotact recognition. Both weekly write-ups remain unverified as submitted, and the real MongoDB 5,000 writes/sec benchmark remains outstanding.
+
+
+### Additional Day 6 work — 19 November 2026 (IST)
+- Added `server/src/telemetry-audit.js` to read actual MongoDB `collStats` for the native time-series `telemetry` collection, including reading count, logical size, allocated storage bytes, index bytes, and allocation per reading.
+- Added the `GET /api/telemetry/audit` Express route. It returns HTTP 503 if database statistics are unavailable instead of inventing measurements.
+- Added six focused `node:test` cases in `server/test/telemetry-audit.test.js`. Ran them locally with Node.js: **6 passed, 0 failed** using mocked MongoDB operations. The full backend test suite and a live database were not executed in this run.
+- **Real audit evidence remains outstanding:** start MongoDB and the backend, generate telemetry, save the response of `GET http://localhost:4000/api/telemetry/audit`, and run `npm run benchmark` to capture actual throughput. The `collStats` allocated bytes represent database collection allocation and not necessarily physical disk usage.
+- Commits: [storage audit module](https://github.com/piyushgujor666-glitch/NexusFlow/commit/816794a595ff0ad827b5c43f1c3492608e1efe01), [audit tests](https://github.com/piyushgujor666-glitch/NexusFlow/commit/5321ab10ada3b4132d63f14f983fb8d6c72f7b64), [Express audit endpoint](https://github.com/piyushgujor666-glitch/NexusFlow/commit/039a41d5ffac7855a3f7755be16d551e5a89005a).
+- These additional commits share **19 November**, already a recorded development day, so the distinct GitHub day count remains **6/10**. Weekly write-up submissions and Infotact portal sync remain unverified.
