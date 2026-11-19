@@ -38,3 +38,18 @@ test('validates the entire batch before writing any points', () => {
 test('normalizes all readings in a valid batch', () => {
   assert.equal(normalizeBatch([{ sensor: 'a', value: 1 }, { sensor: 'b', value: 2 }], clock).length, 2);
 });
+
+test('requires timezone-qualified ISO timestamps to avoid locale-dependent parsing', () => {
+ for (const timestamp of ['2026-11-19', '2026-11-19T10:00:00', '11/19/2026', '2026-11-19 10:00:00Z']) {
+  assert.throws(() => normalizeReading({sensor:'turbine-1',value:1,timestamp}, clock), /ISO 8601/);
+ }
+});
+test('accepts explicit timezone offsets and fractional seconds', () => {
+ const a=normalizeReading({sensor:'turbine-1',value:1,timestamp:'2026-11-19T10:30:00+05:30'},clock);
+ assert.equal(a.timestamp.toISOString(),'2026-11-19T05:00:00.000Z');
+ const b=normalizeReading({sensor:'turbine-1',value:1,timestamp:'2026-11-19T05:00:00.125Z'},clock);
+ assert.equal(b.timestamp.toISOString(),'2026-11-19T05:00:00.125Z');
+});
+test('rejects impossible calendar timestamps', () => {
+ assert.throws(() => normalizeReading({sensor:'turbine-1',value:1,timestamp:'2026-13-19T05:00:00Z'},clock), /Invalid timestamp/);
+});
