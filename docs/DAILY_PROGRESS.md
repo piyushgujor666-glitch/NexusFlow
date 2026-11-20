@@ -107,3 +107,14 @@ Run the graph tests with `cd server && npm install && npm test`.
 - **Real audit evidence remains outstanding:** start MongoDB and the backend, generate telemetry, save the response of `GET http://localhost:4000/api/telemetry/audit`, and run `npm run benchmark` to capture actual throughput. The `collStats` allocated bytes represent database collection allocation and not necessarily physical disk usage.
 - Commits: [storage audit module](https://github.com/piyushgujor666-glitch/NexusFlow/commit/816794a595ff0ad827b5c43f1c3492608e1efe01), [audit tests](https://github.com/piyushgujor666-glitch/NexusFlow/commit/5321ab10ada3b4132d63f14f983fb8d6c72f7b64), [Express audit endpoint](https://github.com/piyushgujor666-glitch/NexusFlow/commit/039a41d5ffac7855a3f7755be16d551e5a89005a).
 - These additional commits share **19 November**, already a recorded development day, so the distinct GitHub day count remains **6/10**. Weekly write-up submissions and Infotact portal sync remain unverified.
+
+
+## Day 7 — 20 November 2026 (IST)
+- Inspected GitHub commit history: the last recorded work before this change was on 19 November, so 20 November establishes a new distinct development day.
+- Fixed the telemetry ISO date-time parser to accept valid fractional seconds (e.g. `2026-11-20T08:00:00.125Z`) and explicit UTC offsets without accidentally matching backslashes.
+- Added calendar validation for leap years, impossible day-of-month values, and out-of-range hours/minutes/seconds/timezone offsets; this prevents JavaScript Date normalization from silently accepting invalid calendar readings.
+- Added `server/test/timestamp-cases.test.js` with five focused regression cases; **5/5 passed using Node.js 22 on the authored local code copy**. The complete remote repository test suite remains unverified.
+- Added `.github/workflows/ci.yml` to run backend tests, client serialization tests, and a Vite production build on pushes and pull requests to `main`. Workflow file was committed, but GitHub Actions completion/pass has not been verified.
+- Expanded README with setup commands, CI guidance, evidence endpoints, and a clear distinction between targets and observed measurements.
+- Commits: [timestamp parser fix](https://github.com/piyushgujor666-glitch/NexusFlow/commit/fab73491e7cef9f2d2d3f9806099e9d5bc3a69c1), [regression tests](https://github.com/piyushgujor666-glitch/NexusFlow/commit/84bc0d9fabfb5fc053d6252b2f33990bdf880777), [automated CI](https://github.com/piyushgujor666-glitch/NexusFlow/commit/4aafed9f44e4ef8017dbda18d787e1907f6d3544), [setup instructions](https://github.com/piyushgujor666-glitch/NexusFlow/commit/88a7ef87ca7e7036b945bbb888aa0c7f27aa1904).
+- **Progress:** 7 unique GitHub commit dates from 14–20 November (subject to Infotact recognition). 3 additional distinct development dates remain; both weekly write-ups remain unverified as submitted. Real MongoDB throughput of 5,000 writes/sec and live storage measurements remain unverified.
