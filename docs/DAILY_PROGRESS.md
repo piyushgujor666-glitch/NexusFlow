@@ -118,3 +118,12 @@ Run the graph tests with `cd server && npm install && npm test`.
 - Expanded README with setup commands, CI guidance, evidence endpoints, and a clear distinction between targets and observed measurements.
 - Commits: [timestamp parser fix](https://github.com/piyushgujor666-glitch/NexusFlow/commit/fab73491e7cef9f2d2d3f9806099e9d5bc3a69c1), [regression tests](https://github.com/piyushgujor666-glitch/NexusFlow/commit/84bc0d9fabfb5fc053d6252b2f33990bdf880777), [automated CI](https://github.com/piyushgujor666-glitch/NexusFlow/commit/4aafed9f44e4ef8017dbda18d787e1907f6d3544), [setup instructions](https://github.com/piyushgujor666-glitch/NexusFlow/commit/88a7ef87ca7e7036b945bbb888aa0c7f27aa1904).
 - **Progress:** 7 unique GitHub commit dates from 14–20 November (subject to Infotact recognition). 3 additional distinct development dates remain; both weekly write-ups remain unverified as submitted. Real MongoDB throughput of 5,000 writes/sec and live storage measurements remain unverified.
+
+### Additional Day 7 work — 20 November 2026, evening (IST)
+- Extended the benchmark CLI to collect verified MongoDB time-series storage metrics before and after its real HTTP ingestion workload.
+- Added `server/src/benchmark-storage.js` with validation of collection identity, nonnegative numeric metrics, and an acknowledged-insert consistency check. Deltas include logical bytes, allocated bytes, index bytes and document count.
+- Added four focused tests in `server/test/benchmark-storage.test.js` for successful capture, unavailable/invalid metrics, concurrent writers and inconsistent counts.
+- The benchmark now fails explicitly when storage evidence cannot be collected rather than printing an incomplete report as if verified. Concurrent external writes can inflate observed storage deltas, which the report discloses.
+- **Verification:** changes committed and GitHub file read-back pending; the new tests, full CI workflow, live MongoDB audit and actual 5,000 writes/sec result have not been verified in this run.
+- Commits: [storage evidence helpers](https://github.com/piyushgujor666-glitch/NexusFlow/commit/1c5aab02e0328fbeb4ffc5449cab01610a4e620e), [benchmark integration](https://github.com/piyushgujor666-glitch/NexusFlow/commit/7c79b6cb625fae107befa926e3505a75055f76e3), [regression tests](https://github.com/piyushgujor666-glitch/NexusFlow/commit/abaea037923076aa1c5a859b473df2d80330d0a5).
+- Same calendar date as Day 7: **7/10 distinct GitHub commit days**, not 8. Infotact portal recognition and both weekly write-up submissions remain unverified.
