@@ -127,3 +127,16 @@ Run the graph tests with `cd server && npm install && npm test`.
 - **Verification:** changes committed and GitHub file read-back pending; the new tests, full CI workflow, live MongoDB audit and actual 5,000 writes/sec result have not been verified in this run.
 - Commits: [storage evidence helpers](https://github.com/piyushgujor666-glitch/NexusFlow/commit/1c5aab02e0328fbeb4ffc5449cab01610a4e620e), [benchmark integration](https://github.com/piyushgujor666-glitch/NexusFlow/commit/7c79b6cb625fae107befa926e3505a75055f76e3), [regression tests](https://github.com/piyushgujor666-glitch/NexusFlow/commit/abaea037923076aa1c5a859b473df2d80330d0a5).
 - Same calendar date as Day 7: **7/10 distinct GitHub commit days**, not 8. Infotact portal recognition and both weekly write-up submissions remain unverified.
+
+
+## Day 8 — 21 November 2026 (IST)
+- Inspected repository history: latest prior commits were made on 20 November, making today's verified changes a new distinct development day.
+- Added `server/src/ingestion.js`: reusable single and batch telemetry HTTP handlers, with **HTTP 400 for invalid readings** and **HTTP 503 for database failures**. Readings only enter the RxJS engine after an acknowledged database write.
+- Updated `server/src/index.js` to use the shared handlers. A successful persisted write remains HTTP 201 even if a best-effort WebSocket broadcast or rule callback fails; errors are logged rather than reported as failed storage.
+- Bound live WebSocket batch payloads to the latest 70 samples per batch, while persisting and evaluating all incoming readings. The frontend already supports array-shaped telemetry events.
+- Added seven dependency-free regression tests in `server/test/ingestion.test.js` covering single and batch ingestion, invalid payloads, persistence failure, array broadcast bounds, and handler failure isolation.
+- **Verified:** Ran `node --test /mnt/data/nexusflow_day8/test/ingestion.test.js` using Node.js 22.16.0: **7 passed, 0 failed**. Git blob hashes for the committed handler and tests exactly match the tested local files. The modified Express integration file was re-read on GitHub `main`.
+- **Unverified:** Full backend integration tests, live MongoDB ingestion, production frontend build, 5,000 writes/sec benchmark and CI pass. This run did not execute those.
+- **Known limitation:** With unordered MongoDB batch insertion, an insertMany error could mean partial database persistence. The API returns 503 and does not broadcast/evaluate a failed batch, but retries are **not idempotent**. A later milestone should introduce event IDs or an idempotent ingestion strategy for production.
+- Commits: [handlers](https://github.com/piyushgujor666-glitch/NexusFlow/commit/b3d84b572f1306e059a237973e5529f7e60cd6b2), [regression tests](https://github.com/piyushgujor666-glitch/NexusFlow/commit/929a88bd9eaa217f8e5a4f000acf7d02d247992d), [Express integration](https://github.com/piyushgujor666-glitch/NexusFlow/commit/e37193c933701e9ebc06ede34e9077d77c14b1f5).
+- **GitHub distinct commit days:** 8 of 10 (14–21 November), subject to Infotact's acceptance rules. The two weekly write-ups remain drafts and have **not** been verified as submitted in Infotact.
