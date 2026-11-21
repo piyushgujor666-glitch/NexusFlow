@@ -9,7 +9,7 @@ test('rejects invalid benchmark bounds',()=>{
 });
 test('accepts valid options and normalizes URL',()=>{
  assert.deepEqual(benchmarkOptions({COUNT:'11',BATCH:'5',CONCURRENCY:'2',API_URL:'https://example.test/'}),
- {total:11,batch:5,concurrency:2,base:'https://example.test'});
+ {total:11,batch:5,concurrency:2,requestTimeoutMs:30000,base:'https://example.test'});
 });
 test('handles partial final batch and reports throughput',async()=>{
  const sizes=[];let time=0;
@@ -31,4 +31,25 @@ test('rejects inaccurate inserted count',async()=>{
 });
 test('requires healthy API before starting timing',async()=>{
  await assert.rejects(()=>runBenchmark({total:1,batch:1,concurrency:1,base:'http://localhost'},{request:async()=>({ok:false,status:503})}),/health check failed/);
+});
+
+test('rejects unsafe request timeout settings',()=>{
+ for (const value of ['0','999','300001','abc','1.5']) {
+  assert.throws(()=>benchmarkOptions({REQUEST_TIMEOUT_MS:value}),/REQUEST_TIMEOUT_MS/);
+ }
+});
+test('passes a timeout signal to health and ingestion requests',async()=>{
+ const calls=[];let now=0;
+ const request=async(url,options)=>{
+  calls.push({url,signal:options.signal});
+  if(url.endsWith('/api/health'))return {ok:true};
+  now+=10;
+  return {ok:true,json:async()=>({inserted:2})};
+ };
+ const result=await runBenchmark({total:2,batch:2,concurrency:1,base:'http://localhost',requestTimeoutMs:2500},{
+  request,clock:()=>now,timeoutSignal:ms=>({timeoutMs:ms})
+ });
+ assert.equal(result.inserted,2);
+ assert.equal(calls.length,2);
+ assert.deepEqual(calls.map(c=>c.signal),[{timeoutMs:2500},{timeoutMs:2500}]);
 });
