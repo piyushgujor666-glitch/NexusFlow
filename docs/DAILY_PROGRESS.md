@@ -140,3 +140,11 @@ Run the graph tests with `cd server && npm install && npm test`.
 - **Known limitation:** With unordered MongoDB batch insertion, an insertMany error could mean partial database persistence. The API returns 503 and does not broadcast/evaluate a failed batch, but retries are **not idempotent**. A later milestone should introduce event IDs or an idempotent ingestion strategy for production.
 - Commits: [handlers](https://github.com/piyushgujor666-glitch/NexusFlow/commit/b3d84b572f1306e059a237973e5529f7e60cd6b2), [regression tests](https://github.com/piyushgujor666-glitch/NexusFlow/commit/929a88bd9eaa217f8e5a4f000acf7d02d247992d), [Express integration](https://github.com/piyushgujor666-glitch/NexusFlow/commit/e37193c933701e9ebc06ede34e9077d77c14b1f5).
 - **GitHub distinct commit days:** 8 of 10 (14–21 November), subject to Infotact's acceptance rules. The two weekly write-ups remain drafts and have **not** been verified as submitted in Infotact.
+
+
+### Additional Day 8 work — 21 November 2026 (IST), evening
+- Added configurable `REQUEST_TIMEOUT_MS` (default 30,000; permitted 1,000–300,000) to the HTTP ingestion benchmark. Both API health checks and each batch POST now receive an `AbortSignal.timeout` signal, avoiding indefinite waits on a stalled service.
+- Updated the benchmark regression suite for the new options shape and added two tests for invalid timeout values and request signal propagation.
+- **Verification:** Files committed through the connected GitHub API and inspected from the `main` branch. The complete benchmark suite was **not run** in this environment: the local checkout failed because `github.com` DNS resolution was unavailable. No real HTTP throughput measurement was performed.
+- Commits: [timeout support](https://github.com/piyushgujor666-glitch/NexusFlow/commit/817691854ced1ae4b3e82ff908dbf6c75ccf3c16), [regression tests](https://github.com/piyushgujor666-glitch/NexusFlow/commit/6789442c970b083414ec424149caca7a96f5c7af).
+- These commits remain on the **same eighth distinct development day**. Two further separate commit dates remain, subject to Infotact recognition. Weekly write-up submissions and the 5,000 writes/sec benchmark are not verified.
