@@ -7,6 +7,7 @@ import {openDatabase} from './db.js';
 import {RuleEngine} from './engine.js';
 import {exampleGraph,validateGraph} from './graph.js';
 import {normalizeReading,normalizeBatch} from './telemetry.js';
+import {createIngestionHandlers} from './ingestion.js';
 import {getTelemetryAudit} from './telemetry-audit.js';
 const port=Number(process.env.PORT||4000),origin=process.env.CLIENT_ORIGIN||'http://localhost:5173';
 const {client,db}=await openDatabase(process.env.MONGO_URI||'mongodb://127.0.0.1:27017',process.env.DB_NAME||'nexusflow');
@@ -20,8 +21,9 @@ engine.deploy(graph);
 app.get('/api/health',async(_req,res)=>{try{await db.command({ping:1});res.json({ok:true,database:'connected'})}catch{res.status(503).json({ok:false})}});
 app.get('/api/flow',(_req,res)=>res.json({graph}));
 app.post('/api/flow',async(req,res)=>{try{const stats=validateGraph(req.body.graph);await db.collection('flows').updateOne({name:'active'},{$set:{graph:req.body.graph,updatedAt:new Date()}},{upsert:true});engine.deploy(req.body.graph);graph=req.body.graph;io.emit('flow:updated',stats);res.json({ok:true,nodeCount:stats.nodeCount,edgeCount:stats.edgeCount,pathCount:stats.paths.length})}catch(e){res.status(400).json({error:e.message})}});
-app.post('/api/telemetry',async(req,res)=>{try{const p=normalizeReading(req.body);await db.collection('telemetry').insertOne(p);engine.ingest(p);io.emit('telemetry',p);res.status(201).json({ok:true})}catch(e){res.status(400).json({error:e.message})}});
-app.post('/api/telemetry/batch',async(req,res)=>{try{const points=normalizeBatch(req.body.readings);await db.collection('telemetry').insertMany(points,{ordered:false});for(const p of points)engine.ingest(p);io.emit('telemetry',points.at(-1));res.status(201).json({ok:true,inserted:points.length})}catch(e){res.status(400).json({error:e.message})}});
+const ingestion=createIngestionHandlers({normalizeReading,normalizeBatch,collection:db.collection('telemetry'),engine,io});
+app.post('/api/telemetry',ingestion.single);
+app.post('/api/telemetry/batch',ingestion.batch);
 app.get('/api/telemetry/recent',async(req,res)=>{try{const sensor=typeof req.query.sensor==='string'?req.query.sensor:'turbine-1';if(!/^[a-zA-Z0-9_-]{1,64}$/.test(sensor))throw Error('Invalid sensor');const pts=await db.collection('telemetry').find({'metadata.sensor':sensor}).sort({timestamp:-1}).limit(100).toArray();res.json(pts.reverse())}catch(e){res.status(400).json({error:e.message})}});
 app.get('/api/telemetry/audit',async(_req,res)=>{
  try {res.json(await getTelemetryAudit(db))}
