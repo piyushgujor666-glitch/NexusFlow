@@ -59,3 +59,27 @@ test('export rejects invalid graphs instead of producing unusable downloads',()=
 test('export rejects duplicate connections',()=>{
  assert.throws(()=>serializeFlow(nodes,[...edges,{...edges[0],id:'second'}]),/duplicate connections/);
 });
+
+
+test('rejects duplicate React Flow edge IDs even when connections differ', () => {
+ const graph=JSON.parse(serializeFlow(nodes,edges));
+ graph.nodes.push({id:'other',type:'alert',position:{x:300,y:20},data:{label:'Other'}});
+ graph.edges.push({id:'e1',source:'sensor',target:'other'});
+ assert.throws(()=>parseFlow(JSON.stringify(graph)),/duplicate edge IDs/);
+});
+
+test('missing edge IDs avoid collision with explicit IDs elsewhere in graph', () => {
+ const graph=JSON.parse(serializeFlow(nodes,edges));
+ graph.nodes.push({id:'other',type:'alert',position:{x:300,y:20},data:{label:'Other'}});
+ graph.edges=[{source:'sensor',target:'alert'},{id:'e-1',source:'sensor',target:'other'}];
+ const imported=parseFlow(JSON.stringify(graph));
+ assert.deepEqual(imported.edges.map(edge=>edge.id),['e-2','e-1']);
+});
+
+test('multiple missing edge IDs get unique stable identifiers', () => {
+ const graph=JSON.parse(serializeFlow(nodes,edges));
+ graph.nodes.push({id:'other',type:'alert',position:{x:300,y:20},data:{label:'Other'}});
+ graph.edges=[{source:'sensor',target:'alert'},{source:'sensor',target:'other'}];
+ const imported=parseFlow(JSON.stringify(graph));
+ assert.deepEqual(imported.edges.map(edge=>edge.id),['e-1','e-2']);
+});
