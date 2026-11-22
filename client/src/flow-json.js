@@ -54,6 +54,16 @@ export function parseFlow(text) {
     return { id: node.id, type: node.type, position: { x: node.position.x, y: node.position.y }, data };
   });
   const connections = new Set();
+  const edgeIds = new Set();
+  // Reserve explicit IDs before generating fallbacks, so missing IDs cannot
+  // collide with later React Flow edges carrying their own IDs.
+  for (const edge of graph.edges) {
+    if (typeof edge?.id === 'string' && edge.id.length > 0) {
+      if (edgeIds.has(edge.id)) throw new Error('Graph contains duplicate edge IDs');
+      edgeIds.add(edge.id);
+    }
+  }
+  let fallback = 0;
   const edges = graph.edges.map(edge => {
     if (!edge || typeof edge.source !== 'string' || typeof edge.target !== 'string' ||
         !ids.has(edge.source) || !ids.has(edge.target) || edge.source === edge.target) {
@@ -62,8 +72,13 @@ export function parseFlow(text) {
     const key = JSON.stringify([edge.source, edge.target]);
     if (connections.has(key)) throw new Error('Graph contains duplicate connections');
     connections.add(key);
+    let id = edge.id;
+    if (typeof id !== 'string' || !id) {
+      do { id = 'e-' + (++fallback); } while (edgeIds.has(id));
+      edgeIds.add(id);
+    }
     return {
-      id: typeof edge.id === 'string' && edge.id ? edge.id : 'e-' + connections.size,
+      id,
       source: edge.source,
       target: edge.target,
       ...(typeof edge.sourceHandle === 'string' ? { sourceHandle: edge.sourceHandle } : {}),
