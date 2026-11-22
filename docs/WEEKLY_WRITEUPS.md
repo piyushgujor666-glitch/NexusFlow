@@ -39,4 +39,15 @@
 
 ## GitHub activity requirement
 
-As of 17 November 2026, repository history shows commits on **four distinct India-local calendar days**: November 14, 15, 16 and 17. This is **4/10** distinct development days, not proof of Infotact approval. Do not manufacture or backdate commits to fill the requirement.
+As of 22 November 2026, repository history shows commits on **nine distinct India-local calendar days**: November 14–22 inclusive. This is **9/10** distinct GitHub development days, subject to Infotact's independent acceptance. The two weekly write-ups remain drafts; **neither portal submission is verified**. Do not manufacture or backdate commits to fill the requirement.
+
+
+## Additional technical evidence through 22 November 2026
+
+**Graph deployment safety:** Flow validation now runs before MongoDB persistence. The backend queues concurrent graph deployments within one API process and restores the previously stored graph if RxJS rule activation fails. The API reports invalid graphs as HTTP 400 and persistence/activation errors as HTTP 503. Nine focused mock-based graph-deployment tests passed on Node.js 22.16.0 on 22 November, and their committed Git blob hashes were verified. See [implementation](../server/src/flow-deployment.js) and [tests](../server/test/flow-deployment.test.js).
+
+**Time-series ingestion and benchmark:** Timestamp validation handles timezone-qualified ISO date-times, calendar validity and fractional seconds. Ingestion routes distinguish malformed readings from database failures. The HTTP benchmark has pre/post storage-audit hooks and request deadlines. These are *implemented verification features*, **not measured proof** of 5,000 writes/second or minimal storage overhead.
+
+**Review evidence outstanding:** Run the complete GitHub Actions pipeline, demonstrate live MongoDB Time-Series ingestion, capture real benchmark output with hardware details, and collect a screenshot of successful graph export/import and alert execution. Manual Infotact submission of Week 1 and Week 2 write-ups and proof of portal acceptance remain outstanding.
+
+**Known limitation:** Flow deployments are serialized only within one Node.js process; multiple API replicas need cross-process coordination. A MongoDB rollback failure is logged and may require manually reconciling persisted and in-memory graph state.
