@@ -10,6 +10,7 @@ import {createFlowHandlers} from './flow-deployment.js';
 import {normalizeReading,normalizeBatch} from './telemetry.js';
 import {createIngestionHandlers} from './ingestion.js';
 import {getTelemetryAudit} from './telemetry-audit.js';
+import {createRecentTelemetryHandler} from './recent-telemetry.js';
 const port=Number(process.env.PORT||4000),origin=process.env.CLIENT_ORIGIN||'http://localhost:5173';
 const {client,db}=await openDatabase(process.env.MONGO_URI||'mongodb://127.0.0.1:27017',process.env.DB_NAME||'nexusflow');
 const app=express();app.use(cors({origin}));app.use(express.json({limit:'3mb'}));
@@ -26,7 +27,7 @@ app.post('/api/flow',flowHandlers.save);
 const ingestion=createIngestionHandlers({normalizeReading,normalizeBatch,collection:db.collection('telemetry'),engine,io});
 app.post('/api/telemetry',ingestion.single);
 app.post('/api/telemetry/batch',ingestion.batch);
-app.get('/api/telemetry/recent',async(req,res)=>{try{const sensor=typeof req.query.sensor==='string'?req.query.sensor:'turbine-1';if(!/^[a-zA-Z0-9_-]{1,64}$/.test(sensor))throw Error('Invalid sensor');const pts=await db.collection('telemetry').find({'metadata.sensor':sensor}).sort({timestamp:-1}).limit(100).toArray();res.json(pts.reverse())}catch(e){res.status(400).json({error:e.message})}});
+app.get('/api/telemetry/recent',createRecentTelemetryHandler({collection:db.collection('telemetry')}));
 app.get('/api/telemetry/audit',async(_req,res)=>{
  try {res.json(await getTelemetryAudit(db))}
  catch(error){console.error('Telemetry audit failed:',error);res.status(503).json({error:'Telemetry storage audit unavailable'})}
