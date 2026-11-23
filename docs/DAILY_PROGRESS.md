@@ -189,3 +189,11 @@ Run the graph tests with `cd server && npm install && npm test`.
 - Updated `docs/INFOTACT_CHECKLIST.md` and `docs/WEEKLY_WRITEUPS.md` to record the observed 10/10 GitHub milestone without claiming portal acceptance.
 - **Unverified:** Full server test suite, GitHub Actions CI outcome, live MongoDB integration, 5,000 writes/sec throughput benchmark, screenshots, portal synchronization, and both weekly write-up submissions.
 - Commits: [sensor validation fix](https://github.com/piyushgujor666-glitch/NexusFlow/commit/29093f8309cc240db5e4b0561692e1bea8288b20), [five regression tests](https://github.com/piyushgujor666-glitch/NexusFlow/commit/9200eb293c28e193f917cd5a41a3f965adb8bc51), [checklist](https://github.com/piyushgujor666-glitch/NexusFlow/commit/ca8c3c5282642ab849c15acaeb121ed2d284c3d2), [weekly write-ups](https://github.com/piyushgujor666-glitch/NexusFlow/commit/bbe443d05388d7d05df15fd4ae48b35588205d18).
+
+
+### Additional Day 10 work — 23 November 2026 (IST), benchmark audit deadline
+- Applied `REQUEST_TIMEOUT_MS` to both pre- and post-benchmark MongoDB storage-audit HTTP calls. Previously, only health and ingestion requests were bounded, so an unresponsive storage-audit endpoint could stall evidence collection.
+- Added two focused tests covering deadline propagation and rejection of invalid audit timeout values.
+- Verified the committed source and test files via GitHub read-back. **Tests and live MongoDB benchmark were not executed in this run**; no throughput or CI pass is claimed.
+- Commits: [audit timeout](https://github.com/piyushgujor666-glitch/NexusFlow/commit/20f79a9e119b61dc50b23a2366cd9282c0ffb08b), [CLI integration](https://github.com/piyushgujor666-glitch/NexusFlow/commit/22ac6c3c4c077766cf20b804986dc3a227e0b1b0), [tests](https://github.com/piyushgujor666-glitch/NexusFlow/commit/ccfbf8755a769c2c4a95dff78954ab3e6d80a8ee).
+- The repository already has commits on 10 distinct IST dates (14–23 November). This same-day work does not increase the count. Infotact portal acceptance, both weekly submissions, and the measured 5,000 writes/sec target remain unverified.
