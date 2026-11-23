@@ -170,3 +170,12 @@ Run the graph tests with `cd server && npm install && npm test`.
 - **Verification:** The updated implementation and test files were read back from GitHub `main` after both commits. **Tests were not executed in this run**: local `git ls-remote` could not resolve `github.com`, preventing a local checkout. Do not treat committed test cases as passing CI evidence.
 - Remaining: 1 additional distinct GitHub commit date to reach 10/10 (subject to Infotact recognition), two weekly write-up submissions unverified, and live MongoDB throughput and full CI verification outstanding.
 - Commits: [edge ID import fix](https://github.com/piyushgujor666-glitch/NexusFlow/commit/6a4b6380ce8766f5ec42555d44c8479aeecfbe70), [regression tests](https://github.com/piyushgujor666-glitch/NexusFlow/commit/7d1e74f13baa957e89afbe4571f02fb407787fcc).
+
+
+## Day 10 — 23 November 2026 (IST)
+- Extracted the recent telemetry GET handler into `server/src/recent-telemetry.js` and wired it into the Express API.
+- Invalid sensor IDs still receive HTTP 400; MongoDB query/cursor failures now correctly return HTTP 503 instead of mislabeling storage outages as bad client requests.
+- Added four regression tests for default sensor selection, latest-100 ordering, validation short-circuiting, and synchronous/asynchronous database failures.
+- Verified the changed source and test files by reading them back from GitHub; the new tests and live MongoDB integration have **not** been executed in this run.
+- Commits: [handler](https://github.com/piyushgujor666-glitch/NexusFlow/commit/9851e8def140bc17ddac68b8c6ac90f0dffbdad5), [API wiring](https://github.com/piyushgujor666-glitch/NexusFlow/commit/f31cd3ee5e2384808823db47606109510d2f15b6), [regression tests](https://github.com/piyushgujor666-glitch/NexusFlow/commit/6de62d1a3417eaa835c58f2bc19632980670d320).
+- GitHub history now contains commits on ten distinct IST dates, November 14–23. Infotact recognition, both weekly write-up submissions, passing CI, and a measured 5,000-writes/sec benchmark remain unverified.
