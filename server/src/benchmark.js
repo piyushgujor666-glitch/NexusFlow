@@ -6,9 +6,9 @@ try {
  console.log('Measuring actual HTTP ingestion; MongoDB and API must be running.');
  console.log('Workload: '+options.total+' readings, batch '+options.batch+', concurrency '+options.concurrency);
  // Fail before inserting anything if the evidence endpoint is unavailable.
- const before=await captureStorageAudit(options.base);
+ const before=await captureStorageAudit(options.base, fetch, {requestTimeoutMs:options.requestTimeoutMs});
  const report=await runBenchmark(options);
- const after=await captureStorageAudit(options.base);
+ const after=await captureStorageAudit(options.base, fetch, {requestTimeoutMs:options.requestTimeoutMs});
  const storage=summarizeStorageChange(before,after,report.inserted);
  console.log(JSON.stringify({benchmark:report,storage},null,2));
  if(!report.targetMet) process.exitCode=2;
