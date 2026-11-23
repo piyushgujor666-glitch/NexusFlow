@@ -1,6 +1,6 @@
 import React,{useCallback,useEffect,useState} from 'react';
 import{createRoot}from'react-dom/client';
-import ReactFlow,{Background,Controls,MiniMap,addEdge,useNodesState,useEdgesState,Handle,Position}from'@xyflow/react';
+import {ReactFlow,Background,Controls,MiniMap,addEdge,useNodesState,useEdgesState,Handle,Position} from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import{io}from'socket.io-client';
 import{LineChart,Line,XAxis,YAxis,Tooltip,ResponsiveContainer}from'recharts';
