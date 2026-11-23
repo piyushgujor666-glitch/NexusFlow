@@ -179,3 +179,13 @@ Run the graph tests with `cd server && npm install && npm test`.
 - Verified the changed source and test files by reading them back from GitHub; the new tests and live MongoDB integration have **not** been executed in this run.
 - Commits: [handler](https://github.com/piyushgujor666-glitch/NexusFlow/commit/9851e8def140bc17ddac68b8c6ac90f0dffbdad5), [API wiring](https://github.com/piyushgujor666-glitch/NexusFlow/commit/f31cd3ee5e2384808823db47606109510d2f15b6), [regression tests](https://github.com/piyushgujor666-glitch/NexusFlow/commit/6de62d1a3417eaa835c58f2bc19632980670d320).
 - GitHub history now contains commits on ten distinct IST dates, November 14–23. Infotact recognition, both weekly write-up submissions, passing CI, and a measured 5,000-writes/sec benchmark remain unverified.
+
+
+### Additional Day 10 work — 23 November 2026 (IST)
+- Independently verified `main` GitHub history: 86 commits returned across **10 distinct IST dates**, 14–23 November 2026. This satisfies the observed GitHub date-count criterion; Infotact portal recognition is **not** verified.
+- Fixed `GET /api/telemetry/recent` handling of explicitly supplied malformed `sensor` query parameters. Repeated parameters (arrays), objects, null, numbers, empty IDs, and unsafe IDs now return HTTP 400 rather than silently using `turbine-1`. Requests with no `sensor` parameter still default to `turbine-1`.
+- Added five tests in `server/test/recent-telemetry-inputs.test.js`, and ran them together with the four existing recent-telemetry tests on Node.js v22.16.0: **9 passed, 0 failed**.
+- **Verification:** The locally tested handler and tests match GitHub `main` blob hashes: handler `c5e1b752da6359a8796ae9a4a546fa6fe30f5197`, new tests `5abd9c0b88875d464e0790c63b76f54130e71ec9`, existing tests `96e11ce80fbb9ad8cebefcb568d79827adf4360d`.
+- Updated `docs/INFOTACT_CHECKLIST.md` and `docs/WEEKLY_WRITEUPS.md` to record the observed 10/10 GitHub milestone without claiming portal acceptance.
+- **Unverified:** Full server test suite, GitHub Actions CI outcome, live MongoDB integration, 5,000 writes/sec throughput benchmark, screenshots, portal synchronization, and both weekly write-up submissions.
+- Commits: [sensor validation fix](https://github.com/piyushgujor666-glitch/NexusFlow/commit/29093f8309cc240db5e4b0561692e1bea8288b20), [five regression tests](https://github.com/piyushgujor666-glitch/NexusFlow/commit/9200eb293c28e193f917cd5a41a3f965adb8bc51), [checklist](https://github.com/piyushgujor666-glitch/NexusFlow/commit/ca8c3c5282642ab849c15acaeb121ed2d284c3d2), [weekly write-ups](https://github.com/piyushgujor666-glitch/NexusFlow/commit/bbe443d05388d7d05df15fd4ae48b35588205d18).
