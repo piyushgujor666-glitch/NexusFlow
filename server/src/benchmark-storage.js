@@ -1,6 +1,9 @@
 /** Capture measured MongoDB collection footprint around an HTTP benchmark. */
-export async function captureStorageAudit(base, request = fetch) {
- const response = await request(base + '/api/telemetry/audit');
+export async function captureStorageAudit(base, request = fetch, { requestTimeoutMs = 30000, timeoutSignal = ms => AbortSignal.timeout(ms) } = {}) {
+ if (!Number.isSafeInteger(requestTimeoutMs) || requestTimeoutMs < 1000 || requestTimeoutMs > 300000) {
+  throw new Error('Invalid storage audit request timeout');
+ }
+ const response = await request(base + '/api/telemetry/audit', { signal: timeoutSignal(requestTimeoutMs) });
  if (!response.ok) throw new Error('Storage audit unavailable: HTTP ' + response.status);
  const audit = await response.json();
  for (const key of ['count', 'sizeBytes', 'storageBytes', 'indexBytes']) {
