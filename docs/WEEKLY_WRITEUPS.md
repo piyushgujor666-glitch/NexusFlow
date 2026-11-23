@@ -39,7 +39,7 @@
 
 ## GitHub activity requirement
 
-As of 22 November 2026, repository history shows commits on **nine distinct India-local calendar days**: November 14–22 inclusive. This is **9/10** distinct GitHub development days, subject to Infotact's independent acceptance. The two weekly write-ups remain drafts; **neither portal submission is verified**. Do not manufacture or backdate commits to fill the requirement.
+As of 23 November 2026, GitHub commit history shows commits on **ten distinct India-local calendar days**: November 14–23 inclusive. This is **10/10 observed GitHub development days**, not proof that Infotact accepted them. The two weekly write-ups remain drafts; **neither portal submission is verified**. Do not manufacture or backdate commits to fill the requirement.
 
 
 ## Additional technical evidence through 22 November 2026
@@ -51,3 +51,11 @@ As of 22 November 2026, repository history shows commits on **nine distinct Indi
 **Review evidence outstanding:** Run the complete GitHub Actions pipeline, demonstrate live MongoDB Time-Series ingestion, capture real benchmark output with hardware details, and collect a screenshot of successful graph export/import and alert execution. Manual Infotact submission of Week 1 and Week 2 write-ups and proof of portal acceptance remain outstanding.
 
 **Known limitation:** Flow deployments are serialized only within one Node.js process; multiple API replicas need cross-process coordination. A MongoDB rollback failure is logged and may require manually reconciling persisted and in-memory graph state.
+
+## Day 10 follow-up — 23 November 2026
+
+**Recent telemetry API:** The server's recent-readings endpoint now rejects malformed supplied sensor query values (such as repeated query parameters producing arrays) instead of silently switching to the default sensor. Missing sensor parameters continue to default to `turbine-1`. This extends the earlier fix distinguishing HTTP 400 input errors from HTTP 503 MongoDB failures.
+
+**Automated verification:** Nine dedicated tests for the updated handler were executed locally with Node.js v22.16.0: **9 passed, 0 failed**. The source and test Git blob hashes were checked against their corresponding local files. These are mock-based tests; they do not establish a live MongoDB test or a passing full CI run.
+
+**Portal and benchmark status:** GitHub activity is verifiably 10/10 distinct IST dates, but portal recognition is unverified. Week 1 and Week 2 are still drafts, and the real 5,000 writes/sec throughput demonstration has not been recorded. Add measured results and original screenshots before submitting.
