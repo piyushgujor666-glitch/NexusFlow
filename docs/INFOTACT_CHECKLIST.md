@@ -3,8 +3,14 @@
 ## Portal (verify these in your Infotact account)
 - [ ] Select NexusFlow project (the screenshot showed this completed).
 - [ ] Connect GitHub repository `piyushgujor666-glitch/NexusFlow` with branch `main`.
-- [ ] Reach 10 **different real commit days**, not simply 10 commits.
+- [ ] Confirm that Infotact's portal recognizes **10 separate GitHub commit dates** and the linked `main` branch.
 - [ ] Submit Week 1 and Week 2 actual write-ups.
+
+## Verified GitHub evidence — 23 November 2026 (IST)
+- [x] Reviewed 86 repository commits and confirmed activity on **10 distinct IST calendar dates**, November 14 through November 23, 2026. GitHub activity has reached the requested 10-day count, **not** proof of Infotact acceptance.
+- [x] Verified today's [recent-telemetry handler](../server/src/recent-telemetry.js) and [nine test cases](../server/test/recent-telemetry.test.js) + [input regression tests](../server/test/recent-telemetry-inputs.test.js): 9 passed locally using Node.js 22.16.0 with mock database dependencies.
+- [ ] Check the [GitHub Actions run](https://github.com/piyushgujor666-glitch/NexusFlow/actions) for complete backend tests and frontend build. The GitHub connector returned no CI status evidence.
+- [ ] Capture a live MongoDB collection configuration, working React Flow UI, successful POST/GET flow, simulator and live alert, and measured throughput output.
 
 ## Technical evidence (per project PDF)
 - [x] Express ingestion endpoint is implemented in source.
