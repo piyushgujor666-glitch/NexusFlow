@@ -83,3 +83,17 @@ test('multiple missing edge IDs get unique stable identifiers', () => {
  const imported=parseFlow(JSON.stringify(graph));
  assert.deepEqual(imported.edges.map(edge=>edge.id),['e-1','e-2']);
 });
+
+
+test('rejects multibyte JSON exceeding the UTF-8 byte limit on import and export',()=>{
+ const largeNodes=[{...nodes[0],data:{...nodes[0].data,label:'界'.repeat(34000)}},nodes[1]];
+ const json=JSON.stringify({nodes:largeNodes,edges});
+ assert.ok(json.length<100000);
+ assert.ok(new TextEncoder().encode(json).byteLength>100000);
+ assert.throws(()=>parseFlow(json),/100 KB/);
+ assert.throws(()=>serializeFlow(largeNodes,edges),/100 KB/);
+});
+test('preserves ordinary multilingual labels',()=>{
+ const multilingual=[{...nodes[0],data:{...nodes[0].data,label:'温度 तापमान'}},nodes[1]];
+ assert.equal(parseFlow(serializeFlow(multilingual,edges)).nodes[0].data.label,'温度 तापमान');
+});
