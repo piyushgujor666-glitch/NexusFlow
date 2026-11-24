@@ -29,7 +29,7 @@ export function serializeFlow(nodes, edges) {
 }
 
 export function parseFlow(text) {
-  if (typeof text !== 'string' || text.length > 100_000) throw new Error('Graph JSON must be text under 100 KB');
+  if (typeof text !== 'string' || text.length > 100_000 || new TextEncoder().encode(text).byteLength > 100_000) throw new Error('Graph JSON must be text under 100 KB');
   let graph;
   try { graph = JSON.parse(text); }
   catch { throw new Error('Graph contains invalid JSON'); }
